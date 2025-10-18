@@ -7,8 +7,6 @@
 
 #define EPSILON 1e-6f
 
-// --- Внутрішні (статичні) допоміжні функції ---
-
 static int read_one_polygone(FILE *fp, Polygone *p)
 {
     if (fread(&p->n, sizeof(NTYPE), 1, fp) != 1)
@@ -40,7 +38,6 @@ static PTYPE area_from_points(TPoint p1, TPoint p2, TPoint p3)
     return fabsf(p1.x * (p2.y - p3.y) + p2.x * (p3.y - p1.y) + p3.x * (p1.y - p2.y)) / 2.0f;
 }
 
-// --- Реалізація функцій з Polygone.h ---
 
 void free_polygone(Polygone *p)
 {
@@ -52,7 +49,7 @@ void free_polygone(Polygone *p)
     }
 }
 
-// а) Додавання багатокутника з консолі
+// task а) 
 void add_polygone_from_console(const char *filename)
 {
     Polygone p = {0, NULL};
@@ -61,7 +58,7 @@ void add_polygone_from_console(const char *filename)
     {
         printf("Error: number of vertices must be 3 or more.\n");
         while (getchar() != '\n')
-            ; // Clear input buffer
+            ; 
         return;
     }
 
@@ -80,7 +77,7 @@ void add_polygone_from_console(const char *filename)
         {
             printf("Error reading coordinates.\n");
             free_polygone(&p);
-            return; // Файл ще не відкрито, можна безпечно виходити
+            return;
         }
     }
 
@@ -114,7 +111,7 @@ void add_polygone_from_console(const char *filename)
     printf("Polygon added successfully.\n");
 }
 
-// б) Додавання з файлу
+// task б)
 void append_polygons_from_file(const char *dest_filename, const char *src_filename)
 {
     FILE *fp_src = fopen(src_filename, "rb");
@@ -163,7 +160,7 @@ void append_polygons_from_file(const char *dest_filename, const char *src_filena
     printf("Appended %u polygons from %s to %s.\n", src_count, src_filename, dest_filename);
 }
 
-// в) Виведення всіх
+// task в) 
 void display_all_polygons(const char *filename)
 {
     FILE *fp = fopen(filename, "rb");
@@ -194,7 +191,7 @@ void display_all_polygons(const char *filename)
     fclose(fp);
 }
 
-// г) Виведення за індексом
+// task г) 
 void display_polygone_by_index(const char *filename, NTYPE index)
 {
     FILE *fp = fopen(filename, "rb");
@@ -229,7 +226,7 @@ void display_polygone_by_index(const char *filename, NTYPE index)
     fclose(fp);
 }
 
-// д) Видалення за індексом
+// task д) 
 int delete_polygone_by_index(const char *filename, NTYPE index)
 {
     FILE *fp_orig = fopen(filename, "rb");
@@ -270,7 +267,7 @@ int delete_polygone_by_index(const char *filename, NTYPE index)
     return TRUE;
 }
 
-// е) Перевірка наявності у файлі
+// task е) 
 int is_present_in_file(const char *filename, const Polygone *p)
 {
     FILE *fp = fopen(filename, "rb");
@@ -301,7 +298,7 @@ int is_present_in_file(const char *filename, const Polygone *p)
     return found;
 }
 
-// є) Пошук з максимальним периметром (ПОКРАЩЕНО)
+// task є) 
 int find_max_perimeter_polygone(const char *filename, Polygone *result)
 {
     FILE *fp = fopen(filename, "rb");
@@ -342,7 +339,7 @@ int find_max_perimeter_polygone(const char *filename, Polygone *result)
     return TRUE;
 }
 
-// ж) Пошук з мінімальною площею (ПОКРАЩЕНО)
+// task ж)
 int find_min_area_polygone(const char *filename, Polygone *result)
 {
     FILE *fp = fopen(filename, "rb");
@@ -383,7 +380,7 @@ int find_min_area_polygone(const char *filename, Polygone *result)
     return TRUE;
 }
 
-// з) Кількість опуклих
+// task з) 
 NTYPE count_convex_polygons(const char *filename)
 {
     FILE *fp = fopen(filename, "rb");
@@ -405,7 +402,7 @@ NTYPE count_convex_polygons(const char *filename)
     return convex_count;
 }
 
-// і) Кількість тих, що містять точку
+// task і) 
 NTYPE count_polygons_containing_point(const char *filename, TPoint p)
 {
     FILE *fp = fopen(filename, "rb");
@@ -427,7 +424,7 @@ NTYPE count_polygons_containing_point(const char *filename, TPoint p)
     return containing_count;
 }
 
-// й) Фільтрація
+// task й) 
 void filter_polygons(const char *file_a, const char *file_b, int (*predicate)(const Polygone *))
 {
     FILE *fp_a = fopen(file_a, "rb"), *fp_b = fopen(file_b, "wb");
@@ -443,7 +440,7 @@ void filter_polygons(const char *file_a, const char *file_b, int (*predicate)(co
 
     NTYPE count_a, count_b = 0;
     fread(&count_a, sizeof(NTYPE), 1, fp_a);
-    fseek(fp_b, sizeof(NTYPE), SEEK_SET); // Залишаємо місце для лічильника
+    fseek(fp_b, sizeof(NTYPE), SEEK_SET); 
     for (NTYPE i = 0; i < count_a; i++)
     {
         Polygone p;
@@ -464,8 +461,7 @@ void filter_polygons(const char *file_a, const char *file_b, int (*predicate)(co
     printf("Filtered %u polygons into file %s\n", count_b, file_b);
 }
 
-// к) Допоміжні геометричні функції
-
+// task к) 
 PTYPE perimeter_polygone(const Polygone *p)
 {
     PTYPE perimeter = 0.0;
@@ -515,7 +511,6 @@ int is_convex(const Polygone *p)
     return TRUE;
 }
 
-// ВИПРАВЛЕНО: функція тепер безпечна
 int is_point_inside(const Polygone *p, TPoint point)
 {
     if (p->n < 3)
@@ -531,7 +526,7 @@ int is_point_inside(const Polygone *p, TPoint point)
     return fabsf(total_area - sum_tri_area) < EPSILON;
 }
 
-// к) Допоміжні функції загального призначення
+// task к) 
 int isEqualPoint(TPoint a, TPoint b)
 {
     return fabsf(a.x - b.x) < EPSILON && fabsf(a.y - b.y) < EPSILON;
