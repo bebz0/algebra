@@ -44,14 +44,13 @@ PTYPE length_point_segment(TPoint p, TSegment seg) {
     
     PTYPE t = (AP.x * AB.x + AP.y * AB.y) / ab_len_sq;
 
-    if (t < 0.0f) { // Найближча точка - A
+    if (t < 0.0f) {
         return sqrtf(powf(p.x - A.x, 2) + powf(p.y - A.y, 2));
     }
-    if (t > 1.0f) { // Найближча точка - B
+    if (t > 1.0f) {
         return sqrtf(powf(p.x - B.x, 2) + powf(p.y - B.y, 2));
     }
 
-    // Проекція на відрізку
     return length_point_line(p, line_from_points(A, B));
 }
 
@@ -98,7 +97,7 @@ TPoint intersect_rays(TRay r1, TRay r2) {
 
     PTYPE det = d1.x * d2.y - d1.y * d2.x;
 
-    if (fabsf(det) < FLT_EPSILON) { // Промені паралельні
+    if (fabsf(det) < FLT_EPSILON) { 
         return invalid_point();
     }
 

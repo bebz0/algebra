@@ -2,7 +2,6 @@
 #include "Polygone.h"
 #include <stdlib.h>
 
-// Допоміжна функція для очищення буфера вводу
 void clear_input_buffer() {
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
@@ -34,15 +33,15 @@ int main() {
     do {
         print_menu();
         if (scanf("%d", &choice) != 1) {
-            choice = -1; // Неправильний вибір
+            choice = -1; 
         }
-        clear_input_buffer(); // Очищуємо буфер після кожного зчитування
+        clear_input_buffer(); 
 
         switch (choice) {
-            case 1: // а) Додавання з консолі
+            case 1: 
                 add_polygone_from_console(main_db);
                 break;
-            case 2: { // б) Додавання з файлу
+            case 2: { 
                 char src_filename[100];
                 printf("Enter source filename: ");
                 scanf("%99s", src_filename);
@@ -50,10 +49,10 @@ int main() {
                 append_polygons_from_file(main_db, src_filename);
                 break;
             }
-            case 3: // в) Виведення всіх
+            case 3:
                 display_all_polygons(main_db);
                 break;
-            case 4: { // г) Виведення за індексом
+            case 4: { 
                 NTYPE index;
                 printf("Enter index to display: ");
                 scanf("%u", &index);
@@ -61,7 +60,7 @@ int main() {
                 display_polygone_by_index(main_db, index);
                 break;
             }
-            case 5: { // д) Видалення за індексом
+            case 5: { 
                 NTYPE index;
                 printf("Enter index to delete: ");
                 scanf("%u", &index);
@@ -73,18 +72,18 @@ int main() {
                 }
                 break;
             }
-            case 6: { // є) Пошук з максимальним периметром
+            case 6: { 
                 Polygone p = {0, NULL};
                 if (find_max_perimeter_polygone(main_db, &p)) {
                     printf("Found polygon with MAX perimeter (%.2f):\n", perimeter_polygone(&p));
-                    display_polygone_by_index(main_db, 0); // Не зовсім коректно, але як приклад
+                    display_polygone_by_index(main_db, 0); 
                     free_polygone(&p);
                 } else {
                     printf("Could not find (file is empty?).\n");
                 }
                 break;
             }
-            case 7: { // ж) Пошук з мінімальною площею
+            case 7: { 
                 Polygone p = {0, NULL};
                 if (find_min_area_polygone(main_db, &p)) {
                     printf("Found polygon with MIN area (%.2f):\n", area_polygone(&p));
@@ -94,10 +93,10 @@ int main() {
                 }
                 break;
             }
-            case 8: // з) Кількість опуклих
+            case 8: 
                 printf("Number of convex polygons: %u\n", count_convex_polygons(main_db));
                 break;
-            case 9: { // і) Кількість тих, що містять точку
+            case 9: { 
                 TPoint point;
                 printf("Enter point coordinates (x y): ");
                 scanf("%f %f", &point.x, &point.y);
@@ -106,7 +105,7 @@ int main() {
                     point.x, point.y, count_polygons_containing_point(main_db, point));
                 break;
             }
-            case 10: { // е) Перевірка наявності
+            case 10: { 
                 Polygone p = {0, NULL};
                 printf("Enter a polygon from console to check for its presence.\n");
                 printf("Enter number of vertices (>=3): ");
@@ -128,7 +127,7 @@ int main() {
                 }
                 break;
             }
-            case 11: { // й) Фільтрація
+            case 11: { 
                 const char* filtered_db = "convex_only.bin";
                 filter_polygons(main_db, filtered_db, is_convex);
                 printf("Filtered polygons saved to '%s'. Displaying content:\n", filtered_db);

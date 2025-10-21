@@ -5,7 +5,6 @@
 #include <math.h>
 #include "testsPolygone.h"
 
-// --- Helper for printing test results ---
 static int test_count = 0;
 static int passed_count = 0;
 
@@ -19,23 +18,19 @@ static void check(const char* test_name, int condition) {
     }
 }
 
-// --- Individual Test Functions ---
 
 static void test_geometry() {
     printf("\n--- Testing Geometry ---\n");
-    // Simple square
     TPoint v1[] = {{0,0}, {5,0}, {5,5}, {0,5}};
     Polygone square = {4, v1};
     check("Area of 5x5 square", fabsf(area_polygone(&square) - 25.0f) < 1e-6);
     check("Perimeter of 5x5 square", fabsf(perimeter_polygone(&square) - 20.0f) < 1e-6);
     check("Square is convex", is_convex(&square) == TRUE);
 
-    // Concave "arrow" shape
     TPoint v2[] = {{0,0}, {4,0}, {2,2}, {4,4}, {0,4}};
     Polygone arrow = {5, v2};
     check("Arrow shape is not convex", is_convex(&arrow) == FALSE);
 
-    // Point-in-polygon test
     TPoint p_inside = {2, 2};
     TPoint p_outside = {6, 6};
     check("Point (2,2) is inside square", is_point_inside(&square, p_inside) == TRUE);
@@ -65,7 +60,6 @@ static void test_file_operations() {
     printf("\n--- Testing File Operations ---\n");
     const char* test_filename = "test_file.bin";
     
-    // Create a test file
     FILE* fp = fopen(test_filename, "wb");
     NTYPE count = 2;
     fwrite(&count, sizeof(NTYPE), 1, fp);
@@ -79,24 +73,19 @@ static void test_file_operations() {
     fwrite(p2.vertice, sizeof(TPoint), p2.n, fp);
     fclose(fp);
 
-    // Test is_present_in_file
     check("is_present_in_file finds existing polygon", is_present_in_file(test_filename, &p1) == TRUE);
     TPoint v3[] = {{9,9}};
     Polygone p3 = {1, v3};
     check("is_present_in_file doesn't find non-existing one", is_present_in_file(test_filename, &p3) == FALSE);
     
-    // Test find_min_area_polygone
     Polygone min_p = {0, NULL};
     find_min_area_polygone(test_filename, &min_p);
-    // Area of p1 (triangle) = 0.5, area of p2 (square) = 4
     check("find_min_area_polygone finds the correct polygon", isEqualPolygone(&min_p, &p1) == TRUE);
     free_polygone(&min_p);
     
-    // Cleanup
     remove(test_filename);
 }
-
-// --- Main function to run all tests ---
+-
 void run_all_tests() {
     test_geometry();
     test_equality();
